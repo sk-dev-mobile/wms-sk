@@ -1,0 +1,1080 @@
+<title>Контур WMS-решения</title>
+<style>
+  * { box-sizing: border-box; }
+
+  :root {
+    --ink: #1c2230;
+    --ink-soft: #4a5468;
+    --muted: #6b7385;
+    --line: #dfe3ea;
+    --paper: #ffffff;
+    --tint: #f7f5f2;
+    --host-bg: #e7e5e1;
+
+    --accent: #b5472b;
+    --accent-soft: #f4e3dc;
+    --accent-deep: #7d3018;
+
+    --accent2: #2f6f6a;
+    --accent2-soft: #dcece9;
+    --accent2-deep: #1d4b47;
+
+    --num-bg: #1c2230;
+    --num-fg: #ffffff;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ink: #e9ecf3;
+      --ink-soft: #c3cadd;
+      --muted: #939cb3;
+      --line: #333c52;
+      --paper: #1a1e2b;
+      --tint: #232838;
+      --host-bg: #12141c;
+
+      --accent: #e2805f;
+      --accent-soft: #3a2a23;
+      --accent-deep: #f3b79b;
+
+      --accent2: #6fc9bf;
+      --accent2-soft: #1c3532;
+      --accent2-deep: #9adfd6;
+
+      --num-bg: #e2805f;
+      --num-fg: #1a1e2b;
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --ink: #e9ecf3;
+    --ink-soft: #c3cadd;
+    --muted: #939cb3;
+    --line: #333c52;
+    --paper: #1a1e2b;
+    --tint: #232838;
+    --host-bg: #12141c;
+
+    --accent: #e2805f;
+    --accent-soft: #3a2a23;
+    --accent-deep: #f3b79b;
+
+    --accent2: #6fc9bf;
+    --accent2-soft: #1c3532;
+    --accent2-deep: #9adfd6;
+
+    --num-bg: #e2805f;
+    --num-fg: #1a1e2b;
+  }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--host-bg);
+  }
+
+  body {
+    font-family: "Iowan Old Style", "Georgia", "Palatino Linotype", "Times New Roman", serif;
+    color: var(--ink);
+    font-size: 13px;
+    line-height: 1.6;
+    padding-block: 28px;
+  }
+
+  .page {
+    max-width: 840px;
+    margin: 0 auto;
+    background: var(--paper);
+    padding: 0;
+  }
+
+  /* ---------- Cover ---------- */
+  .cover {
+    padding: 52px 48px 34px 48px;
+    border-bottom: 3px solid var(--ink);
+  }
+
+  .cover .kicker {
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    font-size: 10.5px;
+    color: var(--accent);
+    font-weight: 700;
+    margin-bottom: 14px;
+  }
+
+  .cover h1 {
+    font-size: 29px;
+    line-height: 1.22;
+    margin: 0 0 14px 0;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    text-wrap: balance;
+  }
+
+  .cover .subtitle {
+    font-size: 14px;
+    color: var(--ink-soft);
+    font-style: italic;
+    max-width: 580px;
+    margin-bottom: 22px;
+  }
+
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 22px;
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-size: 10.8px;
+    color: var(--muted);
+  }
+
+  .legend .item { display: flex; align-items: center; gap: 7px; }
+
+  .legend .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .legend .dot.decided { background: var(--accent); }
+  .legend .dot.open { background: var(--accent2); }
+
+  /* ---------- TOC ---------- */
+  .toc {
+    padding: 24px 48px;
+    background: var(--tint);
+    border-bottom: 1px solid var(--line);
+    font-family: "Helvetica Neue", Arial, sans-serif;
+  }
+
+  .toc-title {
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 10px;
+    color: var(--muted);
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+
+  .toc ol {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    columns: 2;
+    column-gap: 36px;
+  }
+
+  .toc li {
+    font-size: 11.5px;
+    padding: 5px 0;
+    color: var(--ink-soft);
+    break-inside: avoid;
+    display: flex;
+    gap: 8px;
+  }
+
+  .toc li b {
+    color: var(--accent-deep);
+    font-weight: 700;
+    min-width: 16px;
+  }
+
+  /* ---------- Body content ---------- */
+  .content { padding: 8px 48px 46px 48px; }
+
+  section.block {
+    margin-top: 40px;
+    break-inside: avoid-page;
+  }
+
+  .section-head {
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    margin-bottom: 16px;
+    border-bottom: 2px solid var(--ink);
+    padding-bottom: 10px;
+  }
+
+  .section-num {
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    background: var(--num-bg);
+    color: var(--num-fg);
+    font-weight: 700;
+    font-size: 13px;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .section-head h2 {
+    font-size: 19px;
+    margin: 0;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    text-wrap: balance;
+  }
+
+  .section-intro {
+    font-size: 12.4px;
+    color: var(--ink-soft);
+    margin: 0 0 18px 0;
+    max-width: 66ch;
+  }
+
+  ul.points {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  ul.points > li {
+    position: relative;
+    padding: 9px 0 9px 22px;
+    border-bottom: 1px solid var(--line);
+    font-size: 12.3px;
+  }
+
+  ul.points > li:last-child { border-bottom: none; }
+
+  ul.points > li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 16px;
+    width: 6px;
+    height: 6px;
+    background: var(--accent);
+    border-radius: 50%;
+  }
+
+  /* qref pill: links a piece of text to a questionnaire item */
+  .qref {
+    display: inline-flex;
+    align-items: center;
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-size: 9.5px;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    color: var(--accent2-deep);
+    background: var(--accent2-soft);
+    padding: 2px 9px;
+    border-radius: 20px;
+    margin-left: 8px;
+    white-space: nowrap;
+  }
+
+  /* solution / module list */
+  .solution-list { display: flex; flex-direction: column; gap: 10px; }
+
+  .solution-item {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .solution-item:last-child { border-bottom: none; }
+
+  .solution-badge {
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--num-fg);
+    background: var(--num-bg);
+    padding: 3px 9px;
+    border-radius: 3px;
+    white-space: nowrap;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .solution-item p { margin: 0; font-size: 12.3px; }
+  .solution-item p .qref { margin-left: 6px; }
+
+  /* diagram */
+  figure.diagram { margin: 0; padding: 6px 0 0 0; }
+  figure.diagram svg { width: 100%; height: auto; display: block; }
+  figure.diagram figcaption {
+    margin-top: 14px;
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-size: 10.5px;
+    line-height: 1.55;
+    color: var(--muted);
+    text-align: left;
+    border-top: 1px solid var(--line);
+    padding-top: 10px;
+  }
+
+  /* tech grid */
+  .tech-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+
+  .tech-card {
+    background: var(--tint);
+    border-radius: 5px;
+    padding: 15px 18px;
+  }
+
+  .tech-card .tech-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 6px;
+  }
+
+  .tech-card .tech-title {
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-weight: 700;
+    font-size: 12px;
+    color: var(--ink);
+  }
+
+  .tech-card p {
+    margin: 0 0 6px 0;
+    font-size: 12px;
+    color: var(--ink-soft);
+  }
+
+  .tech-card .example {
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-size: 10.5px;
+    color: var(--muted);
+    font-style: normal;
+  }
+
+  .tech-card .example b { color: var(--ink-soft); font-weight: 600; }
+
+  /* timeline */
+  .timeline {
+    display: flex;
+    gap: 0;
+    align-items: stretch;
+  }
+
+  .phase {
+    flex: 1;
+    position: relative;
+    padding: 0 14px 0 0;
+  }
+
+  .phase:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    top: 15px;
+    right: -1px;
+    width: 14px;
+    height: 1px;
+    background: var(--line);
+  }
+
+  .phase .phase-num {
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-weight: 700;
+    font-size: 11px;
+    color: var(--paper);
+    background: var(--ink);
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 12px;
+  }
+
+  .phase.mvp .phase-num { background: var(--accent); }
+
+  .phase h3 {
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-size: 12px;
+    margin: 0 0 6px 0;
+    color: var(--ink);
+  }
+
+  .phase p {
+    font-size: 11.6px;
+    color: var(--ink-soft);
+    margin: 0;
+  }
+
+  @media (max-width: 640px) {
+    .timeline { flex-direction: column; gap: 18px; }
+    .phase:not(:last-child)::after { display: none; }
+  }
+
+  /* risk callout */
+  .problem-callout {
+    background: var(--accent-soft);
+    border: 1px solid var(--accent);
+    padding: 14px 18px;
+    margin-bottom: 16px;
+    font-size: 12px;
+    color: var(--accent-deep);
+    font-family: "Helvetica Neue", Arial, sans-serif;
+  }
+  .problem-callout b { color: var(--ink); }
+
+  /* questionnaire */
+  .qcat { margin-top: 26px; }
+  .qcat:first-child { margin-top: 0; }
+
+  .qcat-head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+
+  .qcat-letter {
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-weight: 700;
+    font-size: 11px;
+    color: var(--accent2-deep);
+    background: var(--accent2-soft);
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .qcat-head h3 {
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin: 0;
+    color: var(--ink);
+  }
+
+  .quest {
+    border-left: 3px solid var(--accent2);
+    background: var(--tint);
+    padding: 13px 18px 14px 16px;
+    margin-bottom: 10px;
+    border-radius: 0 4px 4px 0;
+  }
+
+  .quest .qcode {
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--accent2-deep);
+    letter-spacing: 0.04em;
+    margin-bottom: 5px;
+  }
+
+  .quest .qtext {
+    font-size: 12.4px;
+    margin: 0 0 9px 0;
+    color: var(--ink);
+  }
+
+  .opts { display: flex; flex-wrap: wrap; gap: 6px; }
+
+  .opt {
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-size: 10.8px;
+    color: var(--ink-soft);
+    background: var(--paper);
+    border: 1px solid var(--line);
+    padding: 4px 11px;
+    border-radius: 20px;
+  }
+
+  .opt b { color: var(--ink); font-weight: 700; }
+
+  /* footer */
+  .footer {
+    padding: 22px 48px;
+    border-top: 1px solid var(--line);
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-size: 9.5px;
+    color: var(--muted);
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  strong.hi { color: var(--accent-deep); }
+
+  @media (max-width: 640px) {
+    .cover { padding: 40px 22px 26px 22px; }
+    .toc { padding: 20px 22px; }
+    .toc ol { columns: 1; }
+    .content { padding: 8px 22px 36px 22px; }
+    .tech-grid { grid-template-columns: 1fr; }
+  }
+</style>
+
+<div class="page">
+
+  <div class="cover">
+    <div class="kicker">Материалы к встрече · Часть 2 из 2</div>
+    <h1>Контур решения, технологии и открытые вопросы</h1>
+    <div class="subtitle">Продолжение документа «Автоматизация склада»: как предлагаемая система устроена на верхнем уровне, из чего она будет собрана технически и что из этого нам ещё предстоит решить вместе.</div>
+    <div class="legend">
+      <span class="item"><span class="dot decided"></span>Зафиксировано на прошлой встрече</span>
+      <span class="item"><span class="dot open"></span>Открытый вопрос — см. опросник в разделе 7</span>
+    </div>
+  </div>
+
+  <div class="toc">
+    <div class="toc-title">Содержание</div>
+    <ol>
+      <li><b>1.</b> Что уже решено</li>
+      <li><b>2.</b> Функциональный контур</li>
+      <li><b>3.</b> Как это будет работать</li>
+      <li><b>4.</b> Технологический контур</li>
+      <li><b>5.</b> Этапы внедрения</li>
+      <li><b>6.</b> Риски и что уточнить</li>
+      <li><b>7.</b> Опросник по развилкам</li>
+    </ol>
+  </div>
+
+  <div class="content">
+
+    <section class="block">
+      <div class="section-head">
+        <div class="section-num">1</div>
+        <h2>Что уже решено</h2>
+      </div>
+      <p class="section-intro">Коротко — договорённости прошлой встречи, от которых мы отталкиваемся дальше. Полный разбор текущих процессов и проблем — в первом документе.</p>
+      <ul class="points">
+        <li>Делаем собственную кастомную облачную WMS на отдельном сервере со своей базой данных — вместо покупки готового продукта.</li>
+        <li>Полностью отказываемся от 1С:УТ — учёт прихода, расхода и остатков переезжает внутрь новой системы вместе с адресным хранением.</li>
+        <li>Отказываемся от DataMobile — терминалы сбора данных (ТСД) работают напрямую с новым сервисом, без прослойки.</li>
+        <li>На ТСД появляются чек-листы: кладовщик отмечает шаги, система сама считает биллинг, не показывая кладовщику цены.</li>
+        <li>Появляется «командный пункт» руководителя с аналитикой, инвентаризацией и статусами заказов в реальном времени.</li>
+        <li>Появляются личные кабинеты клиентов для подачи заявок, отслеживания статусов и получения счетов.</li>
+        <li>Внедрение — поэтапное, параллельно с текущими бумажными процессами, без остановки склада.</li>
+        <li>На заметку зафиксированы три идеи: интеграция с «Честным знаком», гибкая настройка системы через нейросети, цифровые доверенности курьеров.</li>
+      </ul>
+    </section>
+
+    <section class="block">
+      <div class="section-head">
+        <div class="section-num">2</div>
+        <h2>Функциональный контур</h2>
+      </div>
+      <p class="section-intro">Из каких смысловых блоков собирается система. Это не техническая архитектура, а список того, что пользователи — клиент, кладовщик, руководитель — увидят и будут использовать.</p>
+      <div class="solution-list">
+        <div class="solution-item">
+          <span class="solution-badge">01</span>
+          <p><strong>Заявки и заказы.</strong> Приём заявок на приёмку/отгрузку, их превращение во внутренний заказ склада — замена сегодняшней переписки по почте и Excel-шаблонам.</p>
+        </div>
+        <div class="solution-item">
+          <span class="solution-badge">02</span>
+          <p><strong>Адресное хранение и остатки.</strong> Учёт товара по ячейкам, а не «навалом», как сейчас — основа для точной инвентаризации и будущей автоматизации.</p>
+        </div>
+        <div class="solution-item">
+          <span class="solution-badge">03</span>
+          <p><strong>ТСД и чек-листы кладовщика.</strong> Задание на терминал, сканирование, отметка шагов — данные для биллинга собираются как побочный эффект обычной работы.</p>
+        </div>
+        <div class="solution-item">
+          <span class="solution-badge">04</span>
+          <p><strong>Биллинг и тарификация.</strong> Автоматический расчёт стоимости услуг по факту выполненных операций, без ручной сборки таблиц и участия нескольких людей.<span class="qref">Б1</span></p>
+        </div>
+        <div class="solution-item">
+          <span class="solution-badge">05</span>
+          <p><strong>Личный кабинет клиента.</strong> Подача заявок, статусы, счета — без почты и без риска, что заявку оформит посторонний человек.</p>
+        </div>
+        <div class="solution-item">
+          <span class="solution-badge">06</span>
+          <p><strong>Командный пункт руководителя.</strong> Сводная аналитика, остатки, статусы заказов в реальном времени — вместо Google Таблиц, собираемых вручную раз в месяц.</p>
+        </div>
+        <div class="solution-item">
+          <span class="solution-badge">07</span>
+          <p><strong>Интеграция с «Честным знаком».</strong> Обмен кодами маркировки при приёмке и отгрузке товара.<span class="qref">И1</span></p>
+        </div>
+        <div class="solution-item">
+          <span class="solution-badge">08</span>
+          <p><strong>Цифровые доверенности курьеров.</strong> Штрихкод заказа вместо бумажной доверенности при выдаче груза.<span class="qref">И2</span></p>
+        </div>
+        <div class="solution-item">
+          <span class="solution-badge">09</span>
+          <p><strong>Выгрузка в бухгалтерию.</strong> Передача итоговых данных по счетам бухгалтеру — без 1С:УТ, но с сохранением связи с бухгалтерским контуром.<span class="qref">К2</span></p>
+        </div>
+      </div>
+    </section>
+
+    <section class="block">
+      <div class="section-head">
+        <div class="section-num">3</div>
+        <h2>Как это будет работать</h2>
+      </div>
+      <p class="section-intro">Сквозной сценарий одного заказа — от заявки клиента до закрытого счёта — так, как он будет выглядеть в новой системе.</p>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 1000 430" role="img"
+             aria-label="Схема пути заказа: клиент подаёт заявку через личный кабинет, система создаёт заказ и формирует задание на ТСД, кладовщик выполняет операцию и отмечает чек-лист, система автоматически обновляет остатки и считает биллинг, после чего клиент видит статус и получает счёт. Параллельно, при работе с маркированным товаром система обменивается кодами с «Честным знаком», а при отгрузке курьер подтверждает получение цифровой доверенностью."
+             font-family="'Helvetica Neue', Arial, sans-serif" fill="currentColor" stroke="currentColor"
+             style="max-width:100%;height:auto;display:block">
+          <defs>
+            <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M0,0 L10,5 L0,10 z" fill="currentColor" stroke="none"/>
+            </marker>
+          </defs>
+
+          <!-- main pipeline: 6 steps -->
+          <!-- step boxes centered at y=90, width 150, gap so total spans ~960 -->
+          <g font-size="11">
+            <!-- connecting line -->
+            <line x1="70" y1="90" x2="930" y2="90" stroke-width="1.4" opacity="0.9" marker-end="url(#arr)"/>
+
+            <!-- 1 -->
+            <rect x="20" y="55" width="130" height="70" rx="6" fill="none" stroke-width="1.6"/>
+            <text x="85" y="80" text-anchor="middle" font-weight="700">1. Заявка</text>
+            <text x="85" y="97" text-anchor="middle" opacity="0.7" font-size="9.5">клиент, кабинет</text>
+            <text x="85" y="111" text-anchor="middle" opacity="0.55" font-size="9">приёмка / отгрузка</text>
+
+            <!-- 2 -->
+            <rect x="185" y="55" width="130" height="70" rx="6" fill="none" stroke-width="1.6"/>
+            <text x="250" y="80" text-anchor="middle" font-weight="700">2. Заказ</text>
+            <text x="250" y="97" text-anchor="middle" opacity="0.7" font-size="9.5">создан системой</text>
+            <text x="250" y="111" text-anchor="middle" opacity="0.55" font-size="9">без 1С</text>
+
+            <!-- 3 -->
+            <rect x="350" y="55" width="150" height="70" rx="6" fill="none" stroke-width="1.6" stroke="var(--accent)"/>
+            <text x="425" y="80" text-anchor="middle" font-weight="700">3. Задание на ТСД</text>
+            <text x="425" y="97" text-anchor="middle" opacity="0.7" font-size="9.5">сканирование, чек-лист</text>
+            <text x="425" y="111" text-anchor="middle" opacity="0.55" font-size="9">кладовщик</text>
+
+            <!-- 4 -->
+            <rect x="530" y="55" width="150" height="70" rx="6" fill="none" stroke-width="1.6"/>
+            <text x="605" y="80" text-anchor="middle" font-weight="700">4. Остатки + биллинг</text>
+            <text x="605" y="97" text-anchor="middle" opacity="0.7" font-size="9.5">считается автоматически</text>
+            <text x="605" y="111" text-anchor="middle" opacity="0.55" font-size="9">цена скрыта от кладовщика</text>
+
+            <!-- 5 -->
+            <rect x="710" y="55" width="130" height="70" rx="6" fill="none" stroke-width="1.6"/>
+            <text x="775" y="80" text-anchor="middle" font-weight="700">5. Статус</text>
+            <text x="775" y="97" text-anchor="middle" opacity="0.7" font-size="9.5">клиенту, в реальном времени</text>
+
+            <!-- 6 -->
+            <rect x="855" y="55" width="125" height="70" rx="6" fill="none" stroke-width="1.6" stroke="var(--accent)"/>
+            <text x="917" y="80" text-anchor="middle" font-weight="700">6. Счёт</text>
+            <text x="917" y="97" text-anchor="middle" opacity="0.7" font-size="9.5">формируется сам</text>
+            <text x="917" y="111" text-anchor="middle" opacity="0.55" font-size="9">без Маргариты и таблиц</text>
+          </g>
+
+          <!-- satellite: Честный знак, tied to step 3 -->
+          <g font-size="10.5">
+            <line x1="425" y1="125" x2="425" y2="220" stroke-width="1.2" stroke-dasharray="4 4" marker-end="url(#arr)" marker-start="url(#arr)"/>
+            <rect x="310" y="222" width="230" height="66" rx="6" fill="none" stroke-width="1.4" stroke-dasharray="4 4"/>
+            <text x="425" y="248" text-anchor="middle" font-weight="700">«Честный знак»</text>
+            <text x="425" y="266" text-anchor="middle" opacity="0.65" font-size="9.5">обмен кодами при приёмке / отгрузке</text>
+            <text x="425" y="280" text-anchor="middle" opacity="0.5" font-size="8.5">только для маркированного товара</text>
+          </g>
+
+          <!-- satellite: courier POA, tied to step 6 -->
+          <g font-size="10.5">
+            <line x1="917" y1="125" x2="917" y2="220" stroke-width="1.2" stroke-dasharray="4 4" marker-end="url(#arr)"/>
+            <rect x="790" y="222" width="210" height="66" rx="6" fill="none" stroke-width="1.4" stroke-dasharray="4 4"/>
+            <text x="895" y="242" text-anchor="middle" font-weight="700">Доверенность курьера</text>
+            <text x="895" y="260" text-anchor="middle" opacity="0.65" font-size="9.5">штрихкод заказа вместо бумаги</text>
+            <text x="895" y="274" text-anchor="middle" opacity="0.5" font-size="8.5">при выдаче груза</text>
+          </g>
+
+          <!-- bottom note: командный пункт видит всё -->
+          <line x1="605" y1="125" x2="605" y2="345" stroke-width="1.2" opacity="0.5" marker-end="url(#arr)"/>
+          <rect x="440" y="347" width="330" height="60" rx="6" fill="none" stroke-width="1.6"/>
+          <text x="605" y="372" text-anchor="middle" font-weight="700" font-size="11">Командный пункт руководителя</text>
+          <text x="605" y="390" text-anchor="middle" opacity="0.65" font-size="9.5">видит весь путь заказа и остатки в реальном времени</text>
+        </svg>
+        <figcaption>Путь одного заказа от заявки до счёта. Оранжевым выделены точки, где раньше требовалось больше всего ручной работы (задание кладовщику и выставление счёта) — здесь система забирает основную нагрузку на себя. Пунктиром — внешние и вспомогательные потоки, которые подключаются не на каждом заказе.</figcaption>
+      </figure>
+    </section>
+
+    <section class="block">
+      <div class="section-head">
+        <div class="section-num">4</div>
+        <h2>Технологический контур</h2>
+      </div>
+      <p class="section-intro">Категории технологий, из которых будет собрано решение. Ниже — не финальный выбор, а ориентир: примеры даны для понимания класса технологии, конкретный вариант закрывается через опросник в разделе 7.</p>
+
+      <div class="tech-grid">
+        <div class="tech-card">
+          <div class="tech-head"><span class="tech-title">Серверная часть (backend)</span><span class="qref">С1</span></div>
+          <p>Принимает заявки, ведёт остатки, считает биллинг, отдаёт данные кабинетам и ТСД.</p>
+          <div class="example"><b>Например:</b> Node.js/TypeScript, Python или другой стек с открытой экосистемой</div>
+        </div>
+        <div class="tech-card">
+          <div class="tech-head"><span class="tech-title">База данных</span></div>
+          <p>Хранит товары, остатки, ячейки, заказы, тарифы и историю операций.</p>
+          <div class="example"><b>Например:</b> реляционная СУБД типа PostgreSQL — стандарт для такого рода учётных данных</div>
+        </div>
+        <div class="tech-card">
+          <div class="tech-head"><span class="tech-title">Веб-интерфейсы</span></div>
+          <p>Личный кабинет клиента и командный пункт руководителя — два разных веб-приложения поверх одного backend.</p>
+          <div class="example"><b>Например:</b> современный SPA-фреймворк (React, Vue и подобные)</div>
+        </div>
+        <div class="tech-card">
+          <div class="tech-head"><span class="tech-title">Приложение для ТСД</span><span class="qref">С4</span></div>
+          <p>То, с чем кладовщик работает руками на терминале — сканирование, чек-листы, задания.</p>
+          <div class="example"><b>Например:</b> нативное Android-приложение или кроссплатформенное решение</div>
+        </div>
+        <div class="tech-card">
+          <div class="tech-head"><span class="tech-title">Хостинг и инфраструктура</span><span class="qref">С2</span></div>
+          <p>Где физически живёт сервер и база данных, с учётом требований к хранению персональных данных клиентов.</p>
+          <div class="example"><b>Например:</b> облачный провайдер с размещением в РФ либо собственный сервер</div>
+        </div>
+        <div class="tech-card">
+          <div class="tech-head"><span class="tech-title">Интеграционный слой</span></div>
+          <p>Обмен с «Честным знаком», уведомления клиентам и сотрудникам, в перспективе — с бухгалтерией.</p>
+          <div class="example"><b>Например:</b> API ГИС МТ, email/SMS/Telegram-шлюзы</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="block">
+      <div class="section-head">
+        <div class="section-num">5</div>
+        <h2>Этапы внедрения</h2>
+      </div>
+      <p class="section-intro">Запускаем не всё сразу, а слоями — каждый этап можно обкатать параллельно с текущими бумажными процессами, прежде чем отказываться от них окончательно.</p>
+
+      <div class="timeline">
+        <div class="phase mvp">
+          <div class="phase-num">0</div>
+          <h3>Техническое проектирование</h3>
+          <p>Закрываем развилки из раздела 7, фиксируем стек и объём MVP.</p>
+        </div>
+        <div class="phase mvp">
+          <div class="phase-num">1</div>
+          <h3>MVP: учёт и склад</h3>
+          <p>Заявки, адресное хранение, остатки, ТСД с чек-листами — замена 1С:УТ и DataMobile в ежедневной работе.</p>
+        </div>
+        <div class="phase">
+          <div class="phase-num">2</div>
+          <h3>Биллинг и кабинеты</h3>
+          <p>Автоматический расчёт стоимости, личный кабинет клиента, командный пункт руководителя.</p>
+        </div>
+        <div class="phase">
+          <div class="phase-num">3</div>
+          <h3>Внешние интеграции</h3>
+          <p>«Честный знак», цифровые доверенности курьеров.</p>
+        </div>
+        <div class="phase">
+          <div class="phase-num">4</div>
+          <h3>Развитие</h3>
+          <p>Гибкая настройка через нейросети, расширенная аналитика, возможный рост в мультисклад.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="block">
+      <div class="section-head">
+        <div class="section-num">6</div>
+        <h2>Риски и что нужно уточнить</h2>
+      </div>
+
+      <div class="problem-callout">
+        <b>Главный риск разработки собственной системы:</b> в отличие от покупки готовой WMS, здесь нет готового поставщика, отвечающего за результат, — качество зависит от того, насколько чётко закрыт объём MVP до старта разработки. Отсюда и важность опросника в разделе 7.
+      </div>
+
+      <ul class="points">
+        <li>Качество переноса остатков при запуске напрямую зависит от состояния данных в сегодняшней 1С.</li>
+        <li>Сотрудников склада и оператора нужно будет обучить работе в новой системе — процесс непривычен даже при удобном интерфейсе.</li>
+        <li>Хранение персональных данных клиентов на облачном сервере накладывает требования 152-ФЗ — влияет на выбор хостинга.</li>
+        <li>Подключение к «Честному знаку» требует регистрации участником оборота маркированных товаров и может занять время само по себе, отдельно от разработки.</li>
+        <li>Без зафиксированного объёма MVP разработка рискует растягиваться — этап 1 стоит держать максимально узким.</li>
+      </ul>
+    </section>
+
+    <section class="block">
+      <div class="section-head">
+        <div class="section-num">7</div>
+        <h2>Опросник по развилкам</h2>
+      </div>
+      <p class="section-intro">Всё, что нельзя решить в одностороннем порядке — потому что зависит от бюджета, сроков, приоритетов и того, как в компании удобнее работать. По каждому пункту нужен один ответ (или пояснение, если ни один вариант не подходит).</p>
+
+      <div class="qcat">
+        <div class="qcat-head"><span class="qcat-letter">К</span><h3>Контур и данные</h3></div>
+
+        <div class="quest">
+          <div class="qcode">К1</div>
+          <p class="qtext">Как стартуем с остатками — переносим данные из 1С или начинаем с чистого листа?</p>
+          <div class="opts">
+            <span class="opt"><b>а.</b> Перенос из 1С</span>
+            <span class="opt"><b>б.</b> Инвентаризация с нуля</span>
+            <span class="opt"><b>в.</b> Гибрид — переносим только активные остатки</span>
+          </div>
+        </div>
+
+        <div class="quest">
+          <div class="qcode">К2</div>
+          <p class="qtext">Отключаем 1С:УТ сразу после запуска MVP или ведём параллельный учёт какое-то время?</p>
+          <div class="opts">
+            <span class="opt"><b>а.</b> Отключаем сразу</span>
+            <span class="opt"><b>б.</b> Параллельно 1–2 месяца</span>
+            <span class="opt"><b>в.</b> Дольше, по решению руководителя склада</span>
+          </div>
+        </div>
+
+        <div class="quest">
+          <div class="qcode">К3</div>
+          <p class="qtext">Система строится под один склад или сразу закладываем поддержку нескольких складов/площадок?</p>
+          <div class="opts">
+            <span class="opt"><b>а.</b> Только один склад</span>
+            <span class="opt"><b>б.</b> Сразу мультисклад</span>
+            <span class="opt"><b>в.</b> Один склад, но с запасом на расширение</span>
+          </div>
+        </div>
+
+        <div class="quest">
+          <div class="qcode">К4</div>
+          <p class="qtext">Рассматриваем ли в будущем предоставление системы как услуги другим складам (SaaS), или это только внутренний инструмент?</p>
+          <div class="opts">
+            <span class="opt"><b>а.</b> Только внутреннее использование</span>
+            <span class="opt"><b>б.</b> Не сейчас, но не закрываем дверь</span>
+            <span class="opt"><b>в.</b> Да, целимся в отдельный продукт</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="qcat">
+        <div class="qcat-head"><span class="qcat-letter">Т</span><h3>ТСД и склад</h3></div>
+
+        <div class="quest">
+          <div class="qcode">Т1</div>
+          <p class="qtext">Работаем с текущими 6 ТСД (Android) или закупаем новое оборудование под систему?</p>
+          <div class="opts">
+            <span class="opt"><b>а.</b> Текущие устройства</span>
+            <span class="opt"><b>б.</b> Постепенная замена на новые</span>
+            <span class="opt"><b>в.</b> Нужна техническая проверка совместимости</span>
+          </div>
+        </div>
+
+        <div class="quest">
+          <div class="qcode">Т2</div>
+          <p class="qtext">Нужен ли ТСД-приложению офлайн-режим на случай сбоев сети, или склад всегда работает онлайн?</p>
+          <div class="opts">
+            <span class="opt"><b>а.</b> Только онлайн</span>
+            <span class="opt"><b>б.</b> Нужен офлайн с синхронизацией</span>
+            <span class="opt"><b>в.</b> Не критично на старте</span>
+          </div>
+        </div>
+
+        <div class="quest">
+          <div class="qcode">Т3</div>
+          <p class="qtext">Чек-листы — фиксированный набор шагов на все операции или конструктор, настраиваемый руководителем?</p>
+          <div class="opts">
+            <span class="opt"><b>а.</b> Фиксированный набор</span>
+            <span class="opt"><b>б.</b> Гибкий конструктор сразу</span>
+            <span class="opt"><b>в.</b> Фиксированный сейчас, конструктор — этапом позже</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="qcat">
+        <div class="qcat-head"><span class="qcat-letter">Л</span><h3>Личный кабинет клиента</h3></div>
+
+        <div class="quest">
+          <div class="qcode">Л1</div>
+          <p class="qtext">Кабинет клиента — только заявки и статусы, или также остатки, документы, история платежей?</p>
+          <div class="opts">
+            <span class="opt"><b>а.</b> Минимум: заявки и статусы</span>
+            <span class="opt"><b>б.</b> Расширенный кабинет сразу</span>
+            <span class="opt"><b>в.</b> Сначала минимум, потом расширяем</span>
+          </div>
+        </div>
+
+        <div class="quest">
+          <div class="qcode">Л2</div>
+          <p class="qtext">Как клиент входит в кабинет?</p>
+          <div class="opts">
+            <span class="opt"><b>а.</b> Логин/пароль</span>
+            <span class="opt"><b>б.</b> Вход по СМС</span>
+            <span class="opt"><b>в.</b> Оба варианта, для крупных клиентов — EDI в перспективе</span>
+          </div>
+        </div>
+
+        <div class="quest">
+          <div class="qcode">Л3</div>
+          <p class="qtext">Насколько детально клиент видит расчёт — только итоговый счёт за период или разбивку по каждой операции онлайн?</p>
+          <div class="opts">
+            <span class="opt"><b>а.</b> Только итоговый счёт</span>
+            <span class="opt"><b>б.</b> Полная детализация онлайн</span>
+            <span class="opt"><b>в.</b> Счёт + детализация по запросу</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="qcat">
+        <div class="qcat-head"><span class="qcat-letter">Б</span><h3>Биллинг и тарифы</h3></div>
+
+        <div class="quest">
+          <div class="qcode">Б1</div>
+          <p class="qtext">Насколько гибким должен быть конструктор тарифов?</p>
+          <div class="opts">
+            <span class="opt"><b>а.</b> Единый прайс на все услуги</span>
+            <span class="opt"><b>б.</b> Тарифы по типу/объёму операции</span>
+            <span class="opt"><b>в.</b> Индивидуальные условия под каждого клиента</span>
+          </div>
+        </div>
+
+        <div class="quest">
+          <div class="qcode">Б2</div>
+          <p class="qtext">Периодичность выставления счетов клиентам?</p>
+          <div class="opts">
+            <span class="opt"><b>а.</b> Раз в месяц, как сейчас</span>
+            <span class="opt"><b>б.</b> По факту каждой операции</span>
+            <span class="opt"><b>в.</b> На выбор клиента</span>
+          </div>
+        </div>
+
+        <div class="quest">
+          <div class="qcode">Б3</div>
+          <p class="qtext">Нужна ли онлайн-оплата счетов прямо в кабинете (эквайринг)?</p>
+          <div class="opts">
+            <span class="opt"><b>а.</b> Не нужно, оплата вне системы</span>
+            <span class="opt"><b>б.</b> Да, встроенная онлайн-оплата</span>
+            <span class="opt"><b>в.</b> Отложить, не в MVP</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="qcat">
+        <div class="qcat-head"><span class="qcat-letter">И</span><h3>Интеграции</h3></div>
+
+        <div class="quest">
+          <div class="qcode">И1</div>
+          <p class="qtext">Глубина интеграции с «Честным знаком»?</p>
+          <div class="opts">
+            <span class="opt"><b>а.</b> Базовый обмен кодами при приёмке/отгрузке</span>
+            <span class="opt"><b>б.</b> Полный цикл: агрегация, разагрегация, списания, возвраты</span>
+            <span class="opt"><b>в.</b> Начинаем с базового, расширяем по необходимости</span>
+          </div>
+        </div>
+
+        <div class="quest">
+          <div class="qcode">И2</div>
+          <p class="qtext">Цифровые доверенности курьеров — свой штрихкод или интеграция с государственным сервисом машиночитаемых доверенностей?</p>
+          <div class="opts">
+            <span class="opt"><b>а.</b> Свой QR/штрихкод внутри системы</span>
+            <span class="opt"><b>б.</b> Интеграция с гос. МЧД</span>
+            <span class="opt"><b>в.</b> Отложить до отдельного этапа</span>
+          </div>
+        </div>
+
+        <div class="quest">
+          <div class="qcode">И3</div>
+          <p class="qtext">Какие каналы уведомлений нужны клиентам и сотрудникам о статусах заказов?</p>
+          <div class="opts">
+            <span class="opt">Email</span>
+            <span class="opt">SMS</span>
+            <span class="opt">Telegram-бот</span>
+            <span class="opt">Push в приложении</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="qcat">
+        <div class="qcat-head"><span class="qcat-letter">С</span><h3>Стек и инфраструктура</h3></div>
+
+        <div class="quest">
+          <div class="qcode">С1</div>
+          <p class="qtext">Есть ли ограничения или предпочтения по технологии backend?</p>
+          <div class="opts">
+            <span class="opt"><b>а.</b> Отдаём на усмотрение разработчиков</span>
+            <span class="opt"><b>б.</b> Есть предпочтение — нужно указать</span>
+            <span class="opt"><b>в.</b> Главный критерий — доступность специалистов на будущую поддержку</span>
+          </div>
+        </div>
+
+        <div class="quest">
+          <div class="qcode">С2</div>
+          <p class="qtext">Где размещаем сервер?</p>
+          <div class="opts">
+            <span class="opt"><b>а.</b> Российский облачный провайдер</span>
+            <span class="opt"><b>б.</b> Свой сервер в офисе/на площадке</span>
+            <span class="opt"><b>в.</b> Не принципиально — важны надёжность и цена</span>
+          </div>
+        </div>
+
+        <div class="quest">
+          <div class="qcode">С3</div>
+          <p class="qtext">Кто разрабатывает и потом поддерживает систему?</p>
+          <div class="opts">
+            <span class="opt"><b>а.</b> Внутренняя команда</span>
+            <span class="opt"><b>б.</b> Внешний подрядчик</span>
+            <span class="opt"><b>в.</b> Гибрид: разработка подрядчиком, поддержка внутри</span>
+          </div>
+        </div>
+
+        <div class="quest">
+          <div class="qcode">С4</div>
+          <p class="qtext">Приложение для ТСД — нативное, кроссплатформенное или веб-приложение в браузере устройства?</p>
+          <div class="opts">
+            <span class="opt"><b>а.</b> Нативное Android</span>
+            <span class="opt"><b>б.</b> Кроссплатформенное</span>
+            <span class="opt"><b>в.</b> Веб-приложение</span>
+          </div>
+        </div>
+
+        <div class="quest">
+          <div class="qcode">С5</div>
+          <p class="qtext">Для аналитики командного пункта достаточно встроенных дашбордов или нужен отдельный BI-инструмент?</p>
+          <div class="opts">
+            <span class="opt"><b>а.</b> Встроенная аналитика</span>
+            <span class="opt"><b>б.</b> Внешний BI поверх данных</span>
+            <span class="opt"><b>в.</b> Начинаем со встроенной, оцениваем позже</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="qcat">
+        <div class="qcat-head"><span class="qcat-letter">О</span><h3>Организация и требования</h3></div>
+
+        <div class="quest">
+          <div class="qcode">О1</div>
+          <p class="qtext">«Гибкая настройка через нейросети» — что автоматизируем в первую очередь?</p>
+          <div class="opts">
+            <span class="opt"><b>а.</b> Ассистент для добавления статусов/полей без разработчика</span>
+            <span class="opt"><b>б.</b> AI-помощник для ответов по аналитике</span>
+            <span class="opt"><b>в.</b> Оба — но отдельным этапом после MVP</span>
+          </div>
+        </div>
+
+        <div class="quest">
+          <div class="qcode">О2</div>
+          <p class="qtext">Насколько критичен простой системы для бизнеса?</p>
+          <div class="opts">
+            <span class="opt"><b>а.</b> Критично с самого начала — нужна отказоустойчивость сразу</span>
+            <span class="opt"><b>б.</b> Можно донастроить после MVP</span>
+            <span class="opt"><b>в.</b> Определим после оценки рисков простоя</span>
+          </div>
+        </div>
+
+        <div class="quest">
+          <div class="qcode">О3</div>
+          <p class="qtext">Есть ли фиксированный бюджет и/или срок запуска?</p>
+          <div class="opts">
+            <span class="opt"><b>а.</b> Да, жёсткие рамки — нужно указать</span>
+            <span class="opt"><b>б.</b> Ориентировочные, гибкие рамки</span>
+            <span class="opt"><b>в.</b> Пока не фиксировали</span>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="footer">
+    <span>Автоматизация Склада · Часть 2</span>
+    <span>Подготовлено 14.09.2026</span>
+  </div>
+
+</div>
